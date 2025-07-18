@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 # Imports do nosso sistema
 from database.config import get_db
 from database.models import Cliente
-from database.repositories import ClienteRepository
+from database.crud import ClienteRepository
 from src.auth import (
     verify_password, get_password_hash, create_access_token, 
     verify_token, get_user_from_token, ACCESS_TOKEN_EXPIRE_MINUTES

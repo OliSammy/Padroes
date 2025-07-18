@@ -1,6 +1,4 @@
-"""
-Repositórios (DAOs) usando SQLAlchemy
-"""
+
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_, desc
 from typing import List, Optional

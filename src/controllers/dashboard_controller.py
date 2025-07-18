@@ -11,7 +11,7 @@ from sqlalchemy import func, desc
 
 from database.config import get_db
 from database.models import Cliente, Pedido, Bebida, StatusPedidoEnum, ItemPedido
-from database.repositories import PedidoRepository, BebidaRepository
+from database.crud import PedidoRepository, BebidaRepository
 
 # Importar autenticação
 from src.auth_service import get_current_user, get_current_staff_user

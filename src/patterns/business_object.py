@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
 from database.config import get_db
-from database.repositories import (
+from database.crud import (
     ClienteRepository, BebidaRepository, PersonalizacaoRepository,
     CarrinhoRepository, PedidoRepository
 )
@@ -198,7 +198,7 @@ class PedidoBO:
         }
     def obter_notificacoes_dict(self, current_user, tipo: str = '', limit: int = 20) -> list:
         """Retorna notificações do usuário (cliente ou staff) como lista de dicts serializáveis"""
-        from database.repositories import PedidoRepository
+        from database.crud import PedidoRepository
         from datetime import datetime
         notificacoes_usuario = []
         # Staff
@@ -247,7 +247,7 @@ class PedidoBO:
         return notificacoes_usuario[:limit]
     def historico_geral_dict(self, status_filtro: Optional[str] = None, data_inicio: Optional[datetime] = None, data_fim: Optional[datetime] = None, limit: int = 50, offset: int = 0) -> list:
         """Retorna histórico geral de pedidos com filtros como lista de dicts serializáveis"""
-        from database.repositories import PedidoRepository, HistoricoRepository
+        from database.crud import PedidoRepository, HistoricoRepository
         from database.models import StatusPedidoEnum
         status_enum = None
         if status_filtro:
@@ -296,7 +296,7 @@ class PedidoBO:
         return resultado
     def historico_pedido_dict(self, pedido_id: int) -> list:
         """Retorna o histórico de um pedido como lista de dicts serializáveis, robusto para Column/None"""
-        from database.repositories import HistoricoRepository, PedidoRepository
+        from database.crud import HistoricoRepository, PedidoRepository
         pedido = PedidoRepository(self.db).obter_por_id(pedido_id)
         if not pedido:
             return []
@@ -850,24 +850,8 @@ class PedidoBO:
         self.observers_clientes: Dict[int, ClienteObserver] = {}
     
     def criar_pedido(self, cliente_id: int, metodo_pagamento: MetodoPagamentoEnum) -> Optional[int]:
-        """Cria um novo pedido usando os padrões implementados com desconto automático"""
-        try:
-            # Buscar cliente
-            cliente = self.cliente_repo.get_by_id(cliente_id)
-            if not cliente:
-                raise ValueError(f"Cliente #{cliente_id} não encontrado")
             
-            # Criar pedido a partir do carrinho (desconto automático baseado no método de pagamento)
-            pedido = self.pedido_repo.create_from_carrinho(
-                cliente_id=cliente_id,
-                metodo_pagamento=metodo_pagamento
-            )
-            
-            # Configurar observer para o cliente
-            if cliente_id not in self.observers_clientes:
-                self.observers_clientes[cliente_id] = ClienteObserver()
-            
-            # Notificar observers usando pattern
+
             subject = PedidoSubject(pedido.id)
             subject.adicionar_observer(self.cozinha_observer)
             subject.adicionar_observer(self.observers_clientes[cliente_id])

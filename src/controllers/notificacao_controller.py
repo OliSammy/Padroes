@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from database.config import get_db
 from database.models import Cliente, Pedido, StatusPedidoEnum
-from database.repositories import PedidoRepository
+from database.crud import PedidoRepository
 from patterns.observer import PedidoSubject, CozinhaObserver, ClienteObserver
 
 # Importar autenticação

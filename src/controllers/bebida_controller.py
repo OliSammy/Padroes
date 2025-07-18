@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from database.config import get_db
 from database.models import Cliente, Bebida, TipoBebidasEnum
-from database.repositories import BebidaRepository, PersonalizacaoRepository
+from database.crud import BebidaRepository, PersonalizacaoRepository
 from patterns.business_object import ProdutoBO
 from patterns.factory import MenuFactory, BebidaFactorySelector
 from patterns.decorator import *

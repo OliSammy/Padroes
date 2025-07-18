@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 # Imports do nosso sistema
 from database.config import get_db
 from database.models import Cliente
-from database.repositories import ClienteRepository
+from database.crud import ClienteRepository
 from patterns.business_object import ProdutoBO, PedidoBO
 from patterns.business_object import ClienteBO
 from src.auth import (

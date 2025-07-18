@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from database.config import get_db
 from database.models import Cliente, StatusPedidoEnum, MetodoPagamentoEnum
-from database.repositories import PedidoRepository, CarrinhoRepository
+from database.crud import PedidoRepository, CarrinhoRepository
 from patterns.business_object import PedidoBO
 from patterns.observer import PedidoSubject, CozinhaObserver, ClienteObserver
 from patterns.state import Pedido as PedidoState

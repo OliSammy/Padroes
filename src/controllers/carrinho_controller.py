@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from database.config import get_db
 from database.models import Cliente
-from database.repositories import CarrinhoRepository, BebidaRepository, PersonalizacaoRepository
+from database.crud import CarrinhoRepository, BebidaRepository, PersonalizacaoRepository
 from patterns.business_object import ClienteBO
 from patterns.decorator import ComponenteBebida, BebidaPersonalizada
 from patterns.factory import MenuFactory

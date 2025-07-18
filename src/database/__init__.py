@@ -3,7 +3,7 @@ Módulo de banco de dados
 """
 from .config import get_db, init_db
 from .models import *
-from .repositories import *
+from .crud import *
 from .seeds import run_seeds
 
 __all__ = [

@@ -7,7 +7,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 
 from database.config import get_db
-from database.repositories import PersonalizacaoRepository, BebidaRepository
+from database.crud import PersonalizacaoRepository, BebidaRepository
 from database.models import TipoBebidasEnum, Cliente
 from src.auth_service import get_current_user
 from patterns.decorator import (
