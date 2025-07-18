@@ -1,0 +1,41 @@
+@startuml packages_MeuProjeto
+set namespaceSeparator none
+package "patterns" as patterns {
+}
+package "patterns.business_object" as patterns.business_object {
+}
+package "patterns.command" as patterns.command {
+}
+package "patterns.decorator" as patterns.decorator {
+}
+package "patterns.factory" as patterns.factory {
+}
+package "patterns.observer" as patterns.observer {
+}
+package "patterns.state" as patterns.state {
+}
+package "patterns.strategy" as patterns.strategy {
+}
+patterns --> patterns.business_object
+patterns --> patterns.command
+patterns --> patterns.decorator
+patterns --> patterns.factory
+patterns --> patterns.observer
+patterns --> patterns.state
+patterns --> patterns.strategy
+patterns.business_object --> patterns.command
+patterns.business_object --> patterns.command
+patterns.business_object --> patterns.decorator
+patterns.business_object --> patterns.decorator
+patterns.business_object --> patterns.factory
+patterns.business_object --> patterns.observer
+patterns.business_object --> patterns.observer
+patterns.business_object --> patterns.state
+patterns.business_object --> patterns.state
+patterns.business_object --> patterns.strategy
+patterns.command --> patterns.decorator
+patterns.command --> patterns.observer
+patterns.command --> patterns.state
+patterns.factory --> patterns.decorator
+patterns.observer --> patterns.state
+@enduml

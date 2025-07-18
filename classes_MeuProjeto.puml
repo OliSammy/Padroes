@@ -1,0 +1,335 @@
+@startuml classes_MeuProjeto
+set namespaceSeparator none
+class "AlterarStatusPedidoCommand" as patterns.command.AlterarStatusPedidoCommand {
+  desfazer()
+  executar()
+}
+class "AvancarEstadoPedidoCommand" as patterns.command.AvancarEstadoPedidoCommand {
+  resultado : NoneType
+  desfazer()
+  executar()
+}
+class "BebidaBase" as patterns.decorator.BebidaBase {
+  get_descricao() -> str
+  get_nome() -> str
+  get_preco() -> float
+  get_tipo() -> str
+}
+class "BebidaDecorator" as patterns.decorator.BebidaDecorator {
+  get_descricao() -> str
+  get_preco() -> float
+  get_tipo() -> str
+}
+class "BebidaFactory" as patterns.factory.BebidaFactory {
+  {abstract}criar_bebida() -> ComponenteBebida
+}
+class "BebidaFactorySelector" as patterns.factory.BebidaFactorySelector {
+  obter_factory(tipo_bebida: str) -> Optional[BebidaFactory]
+}
+class "BebidaPersonalizada" as patterns.decorator.BebidaPersonalizada {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "Cafe" as patterns.decorator.Cafe {
+}
+class "CafeFactory" as patterns.factory.CafeFactory {
+  criar_bebida() -> ComponenteBebida
+}
+class "CanceladoState" as patterns.state.CanceladoState {
+  pode_cancelar()
+  {abstract}proximo_estado(pedido)
+}
+class "CancelarPedidoCommand" as patterns.command.CancelarPedidoCommand {
+  resultado : NoneType
+  desfazer()
+  executar()
+}
+class "Canela" as patterns.decorator.Canela {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "Cha" as patterns.decorator.Cha {
+}
+class "ChaFactory" as patterns.factory.ChaFactory {
+  criar_bebida() -> ComponenteBebida
+}
+class "Chantilly" as patterns.decorator.Chantilly {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "Chocolate" as patterns.decorator.Chocolate {
+}
+class "ChocolateExtra" as patterns.decorator.ChocolateExtra {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "ChocolateFactory" as patterns.factory.ChocolateFactory {
+  criar_bebida() -> ComponenteBebida
+}
+class "ClienteBO" as patterns.business_object.ClienteBO {
+  bebida_repo : BebidaRepository
+  carrinho_repo : CarrinhoRepository
+  cliente_repo : ClienteRepository
+  db
+  menu_factory
+  personalizacao_repo : PersonalizacaoRepository
+  adicionar_ao_carrinho(cliente_id: int, bebida_id: int, quantidade: int, personalizacoes: Optional[List[int]], observacoes: Optional[str]) -> Optional[ItemCarrinho]
+  adicionar_ao_carrinho_dict(cliente_id: int, bebida_id: int, quantidade: int, personalizacoes: Optional[list], observacoes: Optional[str]) -> dict
+  atualizar_item_carrinho_dict(item_id: int, cliente_id: int, quantidade: int, personalizacoes: Optional[list]) -> dict
+  autenticar_cliente(email: str, password: str) -> Optional[Cliente]
+  autenticar_cliente_dict(identifier: str, password: str) -> Optional[dict]
+  buscar_por_email(email: str) -> Optional[Cliente]
+  cadastrar_cliente(nome: str, email: str, password: str) -> Optional[Cliente]
+  cliente_response_dict(cliente) -> dict
+  limpar_carrinho(cliente_id: int) -> bool
+  limpar_carrinho_dict(cliente_id: int) -> dict
+  obter_carrinho(cliente_id: int) -> List[ItemCarrinho]
+  obter_carrinho_dict(cliente_id: int) -> dict
+  obter_cliente(cliente_id: int) -> Optional[Cliente]
+  obter_total_carrinho(cliente_id: int) -> float
+  registrar_cliente_dict(nome: str, email: str, senha: str) -> dict
+  remover_item_carrinho_dict(item_id: int, cliente_id: int) -> dict
+}
+class "ClienteObserver" as patterns.observer.ClienteObserver {
+  update(pedido_id, estado)
+}
+class "Command" as patterns.command.Command {
+  {abstract}desfazer()
+  {abstract}executar()
+}
+class "CommandInvoker" as patterns.command.CommandInvoker {
+  desfazer() -> bool
+  executar_comando(comando: Command)
+  obter_historico() -> List[str]
+  refazer() -> bool
+}
+class "ComponenteBebida" as patterns.decorator.ComponenteBebida {
+  {abstract}get_descricao() -> str
+  {abstract}get_preco() -> float
+  {abstract}get_tipo() -> str
+}
+class "ContextoPagamento" as patterns.strategy.ContextoPagamento {
+  calcular_total(valor_original: float) -> float
+  get_descricao_desconto() -> str
+  set_strategy(strategy: DescontoStrategy)
+}
+class "ContextoPedido" as patterns.business_object.ContextoPedido {
+  pedido_id : NoneType, int
+  status_atual : NoneType, StatusPedidoEnum
+  pode_transicionar_para(novo_status: StatusPedidoEnum) -> bool
+  set_pedido_id(pedido_id: int)
+  set_status(status: StatusPedidoEnum)
+}
+class "CozinhaObserver" as patterns.observer.CozinhaObserver {
+  update(pedido_id, estado)
+}
+class "CriarPedidoCommand" as patterns.command.CriarPedidoCommand {
+  pedido_id : NoneType
+  desfazer()
+  executar()
+}
+class "DescontoFidelidade" as patterns.strategy.DescontoFidelidade {
+  calcular_desconto(valor: float) -> float
+  get_descricao() -> str
+}
+class "DescontoPix" as patterns.strategy.DescontoPix {
+  calcular_desconto(valor: float) -> float
+  get_descricao() -> str
+}
+class "DescontoStrategy" as patterns.strategy.DescontoStrategy {
+  {abstract}calcular_desconto(valor: float) -> float
+  {abstract}get_descricao() -> str
+}
+class "EmPreparoState" as patterns.state.EmPreparoState {
+  pode_cancelar()
+  proximo_estado(pedido)
+}
+class "EntregueState" as patterns.state.EntregueState {
+  pode_cancelar()
+  {abstract}proximo_estado(pedido)
+}
+class "EstadoPedido" as patterns.state.EstadoPedido {
+  {abstract}pode_cancelar()
+  {abstract}proximo_estado(pedido)
+}
+class "InterfaceUsuario" as patterns.command.InterfaceUsuario {
+  alterar_status_pedido(pedido_id: int)
+  cancelar_pedido(pedido_id: int)
+  criar_pedido(bebida: ComponenteBebida)
+  desfazer_ultimo_comando()
+  obter_historico_comandos() -> List[str]
+  refazer_comando()
+}
+class "LeiteDeAveia" as patterns.decorator.LeiteDeAveia {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "LeiteDesnatado" as patterns.decorator.LeiteDesnatado {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "MenuFactory" as patterns.factory.MenuFactory {
+  criar_bebida(tipo: str, nome: Optional[str]) -> Optional[ComponenteBebida]
+  get_tipos_disponiveis() -> list
+  registrar_factory(tipo: str, factory: BebidaFactory)
+}
+class "Observer" as patterns.observer.Observer {
+  {abstract}update(pedido_id, estado)
+}
+class "Pedido" as patterns.state.Pedido {
+  estado
+  pedido_id
+  avancar_estado()
+  cancelar_pedido()
+  get_estado()
+  get_estado_display()
+  pode_ser_cancelado()
+}
+class "PedidoBO" as patterns.business_object.PedidoBO {
+  bebida_repo : BebidaRepository
+  carrinho_repo : CarrinhoRepository
+  cliente_repo : ClienteRepository
+  command_invoker
+  cozinha_observer
+  db
+  menu_factory
+  observers_clientes : Dict[int, ClienteObserver]
+  pedido_repo : PedidoRepository
+  personalizacao_repo : PersonalizacaoRepository
+  alterar_status(pedido_id: int, novo_status: StatusPedidoEnum) -> bool
+  avancar_estado_pedido(pedido_id: int) -> dict
+  bebidas_mais_vendidas_dict(limite: int, dias: int) -> list
+  cancelar_pedido_state_pattern(pedido_id: int) -> dict
+  criar_pedido(cliente_id: int, metodo_pagamento: MetodoPagamentoEnum) -> Optional[int]
+  criar_pedido_completo(cliente_id: int, metodo_pagamento_str: str) -> dict
+  estatisticas_dict() -> dict
+  grafico_vendas_dict(dias: int) -> dict
+  historico_cliente_dict(cliente_id: int) -> list
+  historico_geral_dict(status_filtro: Optional[str], data_inicio: Optional[datetime], data_fim: Optional[datetime], limit: int, offset: int) -> list
+  historico_pedido_dict(pedido_id: int) -> list
+  listar_pedidos_dict(cliente_id: Optional[int], status_filtro: Optional[str], skip: int, limit: int) -> list
+  obter_estatisticas() -> Dict[str, Any]
+  obter_notificacoes_dict(current_user, tipo: str, limit: int) -> list
+  obter_pedido(pedido_id: int) -> Optional[Pedido]
+  obter_pedido_detalhado_dict(pedido_id: int) -> dict
+  obter_pedidos_cozinha() -> List[Pedido]
+  obter_pedidos_por_cliente(cliente_id: int) -> List[Pedido]
+  obter_pedidos_por_status(status: StatusPedidoEnum) -> List[Pedido]
+  pedidos_tempo_real_dict() -> dict
+  processar_pagamento(pedido_id: int, metodo_pagamento: MetodoPagamentoEnum) -> Optional[Dict[str, Any]]
+  relatorio_periodo_dict(data_inicio: datetime, data_fim: datetime) -> dict
+  resumo_cliente_dict(cliente_id: int) -> dict
+}
+class "PedidoSubject" as patterns.observer.PedidoSubject {
+  pedido
+  adicionar_observer(observer)
+  avancar_estado()
+  notificar_observers()
+  remover_observer(observer)
+  set_status(status)
+}
+class "PendenteState" as patterns.state.PendenteState {
+  pode_cancelar()
+  proximo_estado(pedido)
+}
+class "ProdutoBO" as patterns.business_object.ProdutoBO {
+  bebida_repo : BebidaRepository
+  db
+  menu_factory
+  personalizacao_repo : PersonalizacaoRepository
+  atualizar_bebida(bebida_id: int, dados_atualizacao: Dict[str, Any]) -> Optional[Bebida]
+  atualizar_bebida_dict(bebida_id: int, dados_atualizacao: Dict[str, Any]) -> dict
+  bebida_tem_pedidos(bebida_id: int) -> bool
+  buscar_bebidas(query: str) -> List[Bebida]
+  criar_bebida(nome: str, preco_base: float, tipo: TipoBebidasEnum, descricao: Optional[str], disponivel: bool) -> Bebida
+  criar_bebida_dict(nome: str, preco_base: float, tipo: TipoBebidasEnum, descricao: Optional[str], disponivel: bool) -> dict
+  criar_bebida_personalizada(tipo_bebida: str, nome_bebida: str, personalizacoes_ids: List[int]) -> Optional[ComponenteBebida]
+  deletar_bebida(bebida_id: int) -> bool
+  listar_bebidas() -> List[Bebida]
+  listar_bebidas_dict(tipo: Optional[str], disponivel: Optional[bool]) -> list
+  listar_bebidas_por_tipo(tipo: TipoBebidasEnum) -> List[Bebida]
+  listar_categorias_personalizacao_dict() -> dict
+  listar_personalizacoes_bebida_dict(bebida_id: int) -> list
+  listar_personalizacoes_dict(categoria: Optional[str]) -> list
+  obter_bebida(bebida_id: int) -> Optional[Bebida]
+  obter_bebida_dict(bebida_id: int) -> dict
+  obter_menu_completo_dict() -> dict
+  obter_personalizacoes(bebida_id: int) -> List
+  personalizar_bebida_dict(bebida_id: int, personalizacoes_ids: list) -> dict
+}
+class "ProntoState" as patterns.state.ProntoState {
+  pode_cancelar()
+  proximo_estado(pedido)
+}
+class "RecebidoState" as patterns.state.RecebidoState {
+  pode_cancelar()
+  proximo_estado(pedido)
+}
+class "SemAcucar" as patterns.decorator.SemAcucar {
+  get_descricao() -> str
+  get_preco() -> float
+}
+class "SemDesconto" as patterns.strategy.SemDesconto {
+  calcular_desconto(valor: float) -> float
+  get_descricao() -> str
+}
+class "SistemaCafeteria" as patterns.command.SistemaCafeteria {
+  pedidos_ativos : List[PedidoSubject]
+  executar_alteracao_status(pedido_id: int) -> bool
+  executar_cancelamento_pedido(pedido_id: int) -> bool
+  executar_criacao_pedido(bebida: ComponenteBebida) -> PedidoSubject
+  obter_pedido(pedido_id: int) -> Optional[PedidoSubject]
+}
+class "StrategySelector" as patterns.business_object.StrategySelector {
+  criar_strategy(metodo_pagamento: MetodoPagamentoEnum)
+}
+class "Suco" as patterns.decorator.Suco {
+}
+class "SucoFactory" as patterns.factory.SucoFactory {
+  criar_bebida() -> ComponenteBebida
+}
+patterns.command.AlterarStatusPedidoCommand --|> patterns.command.Command
+patterns.command.AvancarEstadoPedidoCommand --|> patterns.command.Command
+patterns.command.CancelarPedidoCommand --|> patterns.command.Command
+patterns.command.CriarPedidoCommand --|> patterns.command.Command
+patterns.decorator.BebidaBase --|> patterns.decorator.ComponenteBebida
+patterns.decorator.BebidaDecorator --|> patterns.decorator.ComponenteBebida
+patterns.decorator.BebidaPersonalizada --|> patterns.decorator.BebidaDecorator
+patterns.decorator.Cafe --|> patterns.decorator.BebidaBase
+patterns.decorator.Canela --|> patterns.decorator.BebidaDecorator
+patterns.decorator.Cha --|> patterns.decorator.BebidaBase
+patterns.decorator.Chantilly --|> patterns.decorator.BebidaDecorator
+patterns.decorator.Chocolate --|> patterns.decorator.BebidaBase
+patterns.decorator.ChocolateExtra --|> patterns.decorator.BebidaDecorator
+patterns.decorator.LeiteDeAveia --|> patterns.decorator.BebidaDecorator
+patterns.decorator.LeiteDesnatado --|> patterns.decorator.BebidaDecorator
+patterns.decorator.SemAcucar --|> patterns.decorator.BebidaDecorator
+patterns.decorator.Suco --|> patterns.decorator.BebidaBase
+patterns.factory.CafeFactory --|> patterns.factory.BebidaFactory
+patterns.factory.ChaFactory --|> patterns.factory.BebidaFactory
+patterns.factory.ChocolateFactory --|> patterns.factory.BebidaFactory
+patterns.factory.SucoFactory --|> patterns.factory.BebidaFactory
+patterns.observer.ClienteObserver --|> patterns.observer.Observer
+patterns.observer.CozinhaObserver --|> patterns.observer.Observer
+patterns.state.CanceladoState --|> patterns.state.EstadoPedido
+patterns.state.EmPreparoState --|> patterns.state.EstadoPedido
+patterns.state.EntregueState --|> patterns.state.EstadoPedido
+patterns.state.PendenteState --|> patterns.state.EstadoPedido
+patterns.state.ProntoState --|> patterns.state.EstadoPedido
+patterns.state.RecebidoState --|> patterns.state.EstadoPedido
+patterns.strategy.DescontoFidelidade --|> patterns.strategy.DescontoStrategy
+patterns.strategy.DescontoPix --|> patterns.strategy.DescontoStrategy
+patterns.strategy.SemDesconto --|> patterns.strategy.DescontoStrategy
+patterns.command.CommandInvoker --* patterns.business_object.PedidoBO : command_invoker
+patterns.command.CommandInvoker --* patterns.command.InterfaceUsuario : _invoker
+patterns.command.SistemaCafeteria --* patterns.command.InterfaceUsuario : _sistema
+patterns.factory.MenuFactory --* patterns.business_object.ClienteBO : menu_factory
+patterns.factory.MenuFactory --* patterns.business_object.PedidoBO : menu_factory
+patterns.factory.MenuFactory --* patterns.business_object.ProdutoBO : menu_factory
+patterns.observer.CozinhaObserver --* patterns.business_object.PedidoBO : cozinha_observer
+patterns.state.CanceladoState --* patterns.state.Pedido : estado
+patterns.state.Pedido --* patterns.observer.PedidoSubject : pedido
+patterns.command.SistemaCafeteria --o patterns.command.AlterarStatusPedidoCommand : _sistema
+patterns.decorator.ComponenteBebida --o patterns.decorator.BebidaDecorator : _bebida
+patterns.strategy.DescontoStrategy --o patterns.strategy.ContextoPagamento : _strategy
+@enduml
