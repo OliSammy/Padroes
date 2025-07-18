@@ -10,8 +10,8 @@ from pathlib import Path
 # Adicionar o diretório raiz ao path
 sys.path.append(str(Path(__file__).parent))
 
-from database.config import init_db, engine
-from database.seeds import run_seeds
+from DAO.config import init_db, engine
+from DAO.seeds import run_seeds
 import sqlite3
 
 

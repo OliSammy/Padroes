@@ -8,9 +8,9 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-from database.config import get_db
-from database.models import Cliente, HistoricoPedido, StatusPedidoEnum
-from database.crud import PedidoRepository, HistoricoRepository
+from DAO.config import get_db
+from DAO.models import Cliente, HistoricoPedido, StatusPedidoEnum
+from DAO.crud import PedidoRepository, HistoricoRepository
 from patterns.business_object import PedidoBO
 
 # Importar autenticação

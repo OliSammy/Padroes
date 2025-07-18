@@ -11,9 +11,9 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
 # Imports do nosso sistema
-from database.config import get_db
-from database.models import Cliente
-from database.crud import ClienteRepository
+from DAO.config import get_db
+from DAO.models import Cliente
+from DAO.crud import ClienteRepository
 from src.auth import (
     verify_password, get_password_hash, create_access_token, 
     verify_token, get_user_from_token, ACCESS_TOKEN_EXPIRE_MINUTES
@@ -187,7 +187,7 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
         hashed_password = get_password_hash(user_data.senha)
         
         # Importar enum
-        from database.models import TipoUsuarioEnum
+        from DAO.models import TipoUsuarioEnum
         tipo_enum = TipoUsuarioEnum.STAFF if user_data.tipo_usuario == "staff" else TipoUsuarioEnum.CLIENTE
         
         # Criar cliente

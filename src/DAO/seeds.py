@@ -2,8 +2,8 @@
 Sistema de Seeds para popular o banco de dados
 """
 from sqlalchemy.orm import Session
-from database.config import get_db, init_db
-from database.models import *
+from DAO.config import get_db, init_db
+from DAO.models import *
 import bcrypt
 
 def hash_password(password: str) -> str:

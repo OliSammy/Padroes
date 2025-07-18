@@ -7,9 +7,9 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-from database.config import get_db
-from database.models import Cliente, StatusPedidoEnum, MetodoPagamentoEnum
-from database.crud import PedidoRepository, CarrinhoRepository
+from DAO.config import get_db
+from DAO.models import Cliente, StatusPedidoEnum, MetodoPagamentoEnum
+from DAO.crud import PedidoRepository, CarrinhoRepository
 from patterns.business_object import PedidoBO
 from patterns.observer import PedidoSubject, CozinhaObserver, ClienteObserver
 from patterns.state import Pedido as PedidoState

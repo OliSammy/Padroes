@@ -7,9 +7,9 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 
-from database.config import get_db
-from database.models import Cliente, Bebida, TipoBebidasEnum
-from database.crud import BebidaRepository, PersonalizacaoRepository
+from DAO.config import get_db
+from DAO.models import Cliente, Bebida, TipoBebidasEnum
+from DAO.crud import BebidaRepository, PersonalizacaoRepository
 from patterns.business_object import ProdutoBO
 from patterns.factory import MenuFactory, BebidaFactorySelector
 from patterns.decorator import *

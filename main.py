@@ -2,18 +2,18 @@
 Aplicação principal do Sistema de Cafeteria
 Implementa padrão MVC com padrões GoF
 """
-import uvicorn
+import uvicorn # type: ignore
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 # Configuração do banco
-from database.config import init_db, get_db
-from database.seeds import run_seeds
+from DAO.config import init_db, get_db
+from DAO.seeds import run_seeds
 
 # Autenticação JWT
 from src.auth_service import get_current_user
-from database.models import Cliente
+from DAO.models import Cliente
 
 # Controllers (padrão MVC)
 from controllers.carrinho_controller import CarrinhoController

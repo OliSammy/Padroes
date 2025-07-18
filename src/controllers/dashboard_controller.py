@@ -9,9 +9,9 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
 
-from database.config import get_db
-from database.models import Cliente, Pedido, Bebida, StatusPedidoEnum, ItemPedido
-from database.crud import PedidoRepository, BebidaRepository
+from DAO.config import get_db
+from DAO.models import Cliente, Pedido, Bebida, StatusPedidoEnum, ItemPedido
+from DAO.crud import PedidoRepository, BebidaRepository
 
 # Importar autenticação
 from src.auth_service import get_current_user, get_current_staff_user

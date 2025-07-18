@@ -13,9 +13,9 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
 # Imports do nosso sistema
-from database.config import get_db
-from database.models import Cliente
-from database.crud import ClienteRepository
+from DAO.config import get_db
+from DAO.models import Cliente
+from DAO.crud import ClienteRepository
 from patterns.business_object import ProdutoBO, PedidoBO
 from patterns.business_object import ClienteBO
 from src.auth import (

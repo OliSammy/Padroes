@@ -6,9 +6,9 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 
-from database.config import get_db
-from database.crud import PersonalizacaoRepository, BebidaRepository
-from database.models import TipoBebidasEnum, Cliente
+from DAO.config import get_db
+from DAO.crud import PersonalizacaoRepository, BebidaRepository
+from DAO.models import TipoBebidasEnum, Cliente
 from src.auth_service import get_current_user
 from patterns.decorator import (
     ComponenteBebida, BebidaPersonalizada, 

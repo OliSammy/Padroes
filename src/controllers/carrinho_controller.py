@@ -6,9 +6,9 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 
-from database.config import get_db
-from database.models import Cliente
-from database.crud import CarrinhoRepository, BebidaRepository, PersonalizacaoRepository
+from DAO.config import get_db
+from DAO.models import Cliente
+from DAO.crud import CarrinhoRepository, BebidaRepository, PersonalizacaoRepository
 from patterns.business_object import ClienteBO
 from patterns.decorator import ComponenteBebida, BebidaPersonalizada
 from patterns.factory import MenuFactory

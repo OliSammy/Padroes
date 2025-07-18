@@ -7,12 +7,12 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
-from database.config import get_db
-from database.crud import (
+from DAO.config import get_db
+from DAO.crud import (
     ClienteRepository, BebidaRepository, PersonalizacaoRepository,
     CarrinhoRepository, PedidoRepository
 )
-from database.models import (
+from DAO.models import (
     StatusPedidoEnum, MetodoPagamentoEnum,
     TipoBebidasEnum, Cliente, Bebida, Pedido, ItemCarrinho
 )
@@ -71,7 +71,7 @@ class PedidoBO:
     def _cancelar_pedido_state_pattern_impl(self, pedido_id: int) -> dict:
         """Implementação original do cancelamento para uso interno do Command"""
         from fastapi import HTTPException, status
-        from database.models import StatusPedidoEnum
+        from DAO.models import StatusPedidoEnum
         from patterns.state import Pedido as PedidoState
         from patterns.observer import PedidoSubject, CozinhaObserver, ClienteObserver
 
@@ -151,7 +151,7 @@ class PedidoBO:
         estado_anterior, novo_estado = pedido_state.avancar_estado()
 
         # Converter para formato do banco
-        from database.models import StatusPedidoEnum
+        from DAO.models import StatusPedidoEnum
         status_map = {
             "Pendente": StatusPedidoEnum.PENDENTE,
             "Recebido": StatusPedidoEnum.RECEBIDO,
@@ -198,7 +198,7 @@ class PedidoBO:
         }
     def obter_notificacoes_dict(self, current_user, tipo: str = '', limit: int = 20) -> list:
         """Retorna notificações do usuário (cliente ou staff) como lista de dicts serializáveis"""
-        from database.crud import PedidoRepository
+        from DAO.crud import PedidoRepository
         from datetime import datetime
         notificacoes_usuario = []
         # Staff
@@ -247,8 +247,8 @@ class PedidoBO:
         return notificacoes_usuario[:limit]
     def historico_geral_dict(self, status_filtro: Optional[str] = None, data_inicio: Optional[datetime] = None, data_fim: Optional[datetime] = None, limit: int = 50, offset: int = 0) -> list:
         """Retorna histórico geral de pedidos com filtros como lista de dicts serializáveis"""
-        from database.crud import PedidoRepository, HistoricoRepository
-        from database.models import StatusPedidoEnum
+        from DAO.crud import PedidoRepository, HistoricoRepository
+        from DAO.models import StatusPedidoEnum
         status_enum = None
         if status_filtro:
             try:
@@ -296,7 +296,7 @@ class PedidoBO:
         return resultado
     def historico_pedido_dict(self, pedido_id: int) -> list:
         """Retorna o histórico de um pedido como lista de dicts serializáveis, robusto para Column/None"""
-        from database.crud import HistoricoRepository, PedidoRepository
+        from DAO.crud import HistoricoRepository, PedidoRepository
         pedido = PedidoRepository(self.db).obter_por_id(pedido_id)
         if not pedido:
             return []
@@ -336,8 +336,8 @@ class PedidoBO:
     def bebidas_mais_vendidas_dict(self, limite: int, dias: int) -> list:
         """Retorna lista de bebidas mais vendidas como dicts serializáveis"""
         from sqlalchemy import func, desc
-        from database.models import Pedido, Bebida, ItemPedido, StatusPedidoEnum
-        from database.config import get_db
+        from DAO.models import Pedido, Bebida, ItemPedido, StatusPedidoEnum
+        from DAO.config import get_db
         db = self.db
         data_inicio = datetime.now() - timedelta(days=dias)
         resultado = db.query(
@@ -369,7 +369,7 @@ class PedidoBO:
     def relatorio_periodo_dict(self, data_inicio: datetime, data_fim: datetime) -> dict:
         """Retorna relatório detalhado de um período como dict serializável"""
         from sqlalchemy import func, desc
-        from database.models import Pedido, Bebida, ItemPedido, StatusPedidoEnum
+        from DAO.models import Pedido, Bebida, ItemPedido, StatusPedidoEnum
         db = self.db
         pedidos = db.query(Pedido).filter(
             Pedido.created_at >= data_inicio,
@@ -416,7 +416,7 @@ class PedidoBO:
 
     def pedidos_tempo_real_dict(self) -> dict:
         """Retorna pedidos em tempo real para a cozinha como dict serializável"""
-        from database.models import StatusPedidoEnum
+        from DAO.models import StatusPedidoEnum
         pedidos_cozinha = self.obter_pedidos_cozinha()
         now = datetime.now()
         return {
@@ -455,7 +455,7 @@ class PedidoBO:
     def grafico_vendas_dict(self, dias: int) -> dict:
         """Retorna dados para gráfico de vendas como dict serializável"""
         from sqlalchemy import func
-        from database.models import Pedido, StatusPedidoEnum
+        from DAO.models import Pedido, StatusPedidoEnum
         db = self.db
         data_inicio = datetime.now() - timedelta(days=dias)
         vendas_por_dia = db.query(
@@ -482,7 +482,7 @@ class PedidoBO:
     def resumo_cliente_dict(self, cliente_id: int) -> dict:
         """Retorna resumo do cliente logado como dict serializável"""
         from sqlalchemy import func, desc
-        from database.models import Pedido, StatusPedidoEnum
+        from DAO.models import Pedido, StatusPedidoEnum
         db = self.db
         pedidos = db.query(Pedido).filter(
             Pedido.cliente_id == cliente_id
@@ -616,7 +616,7 @@ class PedidoBO:
             pedidos = self.obter_pedidos_por_cliente(cliente_id)
         elif status_filtro:
             try:
-                from database.models import StatusPedidoEnum
+                from DAO.models import StatusPedidoEnum
                 status_enum = StatusPedidoEnum(status_filtro)
                 pedidos = self.obter_pedidos_por_status(status_enum)
             except Exception:
@@ -664,7 +664,7 @@ class PedidoBO:
             itens = getattr(pedido, "itens", None)
             # Sempre consulta o banco se a relação vier vazia ou não carregada
             try:
-                from database.models import ItemPedido
+                from DAO.models import ItemPedido
                 if hasattr(self, 'db') and hasattr(pedido, 'id'):
                     count = self.db.query(ItemPedido).filter(ItemPedido.pedido_id == pedido.id).count()
                     d["itens_count"] = count
@@ -740,7 +740,7 @@ class PedidoBO:
     def criar_pedido_completo(self, cliente_id: int, metodo_pagamento_str: str) -> dict:
         """Cria novo pedido usando Command Pattern e retorna dict pronto para o controller"""
         from fastapi import HTTPException, status
-        from database.models import MetodoPagamentoEnum
+        from DAO.models import MetodoPagamentoEnum
         from patterns.command import CriarPedidoCommand, CommandInvoker
         try:
             try:

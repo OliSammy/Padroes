@@ -1,11 +1,11 @@
 
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, desc
+from sqlalchemy.orm import Session # type: ignore
+from sqlalchemy import and_, or_, desc # type: ignore
 from typing import List, Optional
 from datetime import datetime
-import bcrypt
+import bcrypt # type: ignore
 
-from database.models import *
+from DAO.models import *
 
 class BaseRepository:
     """Repositório base com operações CRUD"""
@@ -137,7 +137,7 @@ class BebidaRepository(BaseRepository):
     
     def tem_pedidos_associados(self, bebida_id: int) -> bool:
         """Verifica se a bebida tem pedidos associados"""
-        from database.models import ItemPedido
+        from DAO.models import ItemPedido
         count = self.db.query(ItemPedido).filter(ItemPedido.bebida_id == bebida_id).count()
         return count > 0
 
@@ -387,7 +387,7 @@ class PedidoRepository(BaseRepository):
         
         # Atualiza observações consolidadas do pedido usando SQL direto
         if observacoes_consolidadas:
-            from sqlalchemy import text
+            from sqlalchemy import text # type: ignore
             observacoes_texto = ", ".join(observacoes_consolidadas)
             self.db.execute(
                 text("UPDATE pedidos SET observacoes = :obs WHERE id = :pedido_id"),
